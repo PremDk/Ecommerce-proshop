@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { getUserDetails, updateUserProfile } from '../actions/userActions';
 import { listMyOrders } from '../actions/orderActions';
 import { LinkContainer } from 'react-router-bootstrap';
+import { USER_UPDATE_PROFILE_RESET } from '../constants/userConstants';
 
 const ProfileScreen = () => {
   const [name, setName] = useState('');
@@ -31,14 +32,15 @@ const ProfileScreen = () => {
     // console.log(userInfo);
     if (!userInfo) {
       navigate('/login');
-    } else if (!user || !user.name) {
+    } else if (!user || !user.name || success) {
+      dispatch({ type: USER_UPDATE_PROFILE_RESET });
       dispatch(getUserDetails('profile'));
       dispatch(listMyOrders());
     } else {
       setName(user.name);
       setEmail(user.email);
     }
-  }, [navigate, userInfo, dispatch, user]);
+  }, [navigate, userInfo, dispatch, user, success]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
